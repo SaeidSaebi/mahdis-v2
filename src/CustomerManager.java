@@ -1,7 +1,6 @@
-import java.util.*;
 import java.io.*;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CustomerManager {
     private List<Customer> customers = new ArrayList<>();
@@ -49,9 +48,11 @@ public class CustomerManager {
 
     private void loadCustomersFromFile() {
         try (BufferedReader reader = new BufferedReader(new FileReader(CUSTOMER_FILE))) {
-            Gson gson = new Gson();
-            customers = gson.fromJson(reader, new TypeToken<ArrayList<Customer>>(){}.getType());
-            if (customers == null) customers = new ArrayList<>();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                // For now, we'll just create an empty list
+                customers = new ArrayList<>();
+            }
         } catch (IOException e) {
             customers = new ArrayList<>();
         }
@@ -59,8 +60,10 @@ public class CustomerManager {
 
     private void saveCustomersToFile() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(CUSTOMER_FILE))) {
-            Gson gson = new Gson();
-            writer.write(gson.toJson(customers));
+            for (Customer customer : customers) {
+                writer.write(customer.toString());
+                writer.newLine();
+            }
         } catch (IOException e) {
             System.out.println("خطا در ذخیره مشتریان: " + e.getMessage());
         }

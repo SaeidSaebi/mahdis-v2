@@ -2,10 +2,66 @@ import java.util.Scanner;
 import java.util.List;
 import java.io.FileWriter;
 import java.io.IOException;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import java.io.*;
+import java.util.ArrayList;
 
 public class OrderManager {
+    private List<Order> orders = new ArrayList<>();
+    private final String ORDER_FILE = "orders.json";
+
+    public OrderManager() {
+        loadOrdersFromFile();
+    }
+
+    public void addOrder(Order order) {
+        orders.add(order);
+        saveOrdersToFile();
+        System.out.println("سفارش ثبت شد.");
+    }
+
+    public void displayOrders() {
+        if (orders.isEmpty()) {
+            System.out.println("هیچ سفارشی ثبت نشده است.");
+            return;
+        }
+        for (Order o : orders) {
+            System.out.println(o);
+        }
+    }
+
+    public List<Order> getOrdersByCustomer(String email) {
+        List<Order> customerOrders = new ArrayList<>();
+        for (Order o : orders) {
+            if (o.getCustomer().getEmail().equalsIgnoreCase(email)) {
+                customerOrders.add(o);
+            }
+        }
+        return customerOrders;
+    }
+
+    private void loadOrdersFromFile() {
+        try (BufferedReader reader = new BufferedReader(new FileReader(ORDER_FILE))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                // For now, we'll just create an empty list
+                orders = new ArrayList<>();
+            }
+        } catch (IOException e) {
+            orders = new ArrayList<>();
+        }
+    }
+
+    private void saveOrdersToFile() {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(ORDER_FILE))) {
+            for (Order order : orders) {
+                writer.write(order.toString());
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            System.out.println("خطا در ذخیره سفارشات: " + e.getMessage());
+        }
+    }
+
     public void handleOrder(MenuManager menuManager, boolean isOnline, Scanner scanner) {
         Order order = new Order();
         order.isOnline = isOnline;
@@ -25,30 +81,8 @@ public class OrderManager {
             }
         }
 
-        saveOrder(order);
+        addOrder(order);
         System.out.println(order);
-    }
-
-    private void saveOrder(Order order) {
-        try {
-            Gson gson = new Gson();
-            java.io.File file = new java.io.File("orders.json");
-            java.util.List<Order> orders;
-            if (file.exists()) {
-                java.io.FileReader reader = new java.io.FileReader(file);
-                orders = gson.fromJson(reader, new TypeToken<java.util.List<Order>>(){}.getType());
-                reader.close();
-                if (orders == null) orders = new java.util.ArrayList<>();
-            } else {
-                orders = new java.util.ArrayList<>();
-            }
-            orders.add(order);
-            FileWriter writer = new FileWriter(file);
-            gson.toJson(orders, writer);
-            writer.close();
-        } catch (IOException e) {
-            System.out.println("خطا در ذخیره سفارش: " + e.getMessage());
-        }
     }
 }
 

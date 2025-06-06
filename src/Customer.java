@@ -9,6 +9,10 @@ public class Customer {
         this.subscribed = false;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public String getEmail() {
         return email;
     }
@@ -25,6 +29,6 @@ public class Customer {
 
     @Override
     public String toString() {
-        return name + " (" + email + ") - اشتراک: " + (subscribed ? "فعال" : "غیرفعال");
+        return String.format("%s (%s) - اشتراک: %s", name, email, (subscribed ? "فعال" : "غیرفعال"));
     }
 } 

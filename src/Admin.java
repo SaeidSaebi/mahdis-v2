@@ -1,10 +1,13 @@
 import enums.MenuItemType;
-
 import java.util.Scanner;
 
-public class Admin extends User {
+public class Admin {
+    private String username;
+    private String password;
+
     public Admin(String username, String password) {
-        super(username, password);
+        this.username = username;
+        this.password = password;
     }
 
     public void manageMenu(MenuManager menuManager, Scanner scanner) {
@@ -13,19 +16,17 @@ public class Admin extends User {
         System.out.print("نام غذای جدید: ");
         String name = scanner.nextLine();
         System.out.print("قیمت غذای جدید: ");
-        int price = scanner.nextInt();
+        double price = scanner.nextDouble();
         scanner.nextLine(); // پاک کردن خط جدید
 
-        System.out.print("دسته‌بندی غذا (مثلاً غذای اصلی، نوشیدنی، دسر): ");
-        String category = scanner.nextLine();
-        System.out.print("رتبه غذا (عدد): ");
-        int rank = scanner.nextInt();
-        scanner.nextLine();
-        System.out.print("آیا غذا موجود است؟ (true/false): ");
-        boolean available = scanner.nextBoolean();
-        scanner.nextLine();
+        System.out.print("دسته‌بندی غذا (APPETIZER, MAIN_COURSE, DESSERT, BEVERAGE): ");
+        String typeInput = scanner.nextLine().trim().toUpperCase();
+        MenuItemType type = MenuItemType.valueOf(typeInput);
 
-        menuManager.addItem(name, price, category, rank, available);
+        System.out.print("توضیحات غذا: ");
+        String description = scanner.nextLine();
+
+        menuManager.addItem(name, price, type, description);
         System.out.println("غذا اضافه شد.");
     }
 
@@ -38,5 +39,6 @@ public class Admin extends User {
     }
 
     public boolean login(String username, String password) {
+        return this.username.equals(username) && this.password.equals(password);
     }
 }
