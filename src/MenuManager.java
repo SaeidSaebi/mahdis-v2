@@ -39,28 +39,19 @@ public class MenuManager {
             menu = new ArrayList<>();
             String line;
             while ((line = reader.readLine()) != null && !line.trim().isEmpty()) {
-                // Parse the saved menu item format
-                // Format: "name - type - price تومان\ndescription"
-                if (line.contains(" - ") && line.contains(" تومان")) {
-                    String[] parts = line.split(" - ");
-                    if (parts.length >= 3) {
+                // Parse the saved menu item format: name|type|price|description
+                String[] parts = line.split("\\|");
+                if (parts.length == 4) {
+                    try {
                         String name = parts[0].trim();
                         String typeStr = parts[1].trim();
-                        String priceStr = parts[2].replace(" تومان", "").trim();
+                        double price = Double.parseDouble(parts[2].trim());
+                        String description = parts[3].trim();
                         
-                        // Read the next line for description
-                        String description = "";
-                        if (reader.ready()) {
-                            description = reader.readLine();
-                        }
-                        
-                        try {
-                            double price = Double.parseDouble(priceStr);
-                            MenuItemType type = MenuItemType.valueOf(typeStr);
-                            menu.add(new MenuItem(name, price, type, description));
-                        } catch (Exception e) {
-                            System.out.println("خطا در بارگذاری آیتم منو: " + line);
-                        }
+                        MenuItemType type = MenuItemType.valueOf(typeStr);
+                        menu.add(new MenuItem(name, price, type, description));
+                    } catch (Exception e) {
+                        System.out.println("خطا در بارگذاری آیتم منو: " + line);
                     }
                 }
             }
@@ -72,9 +63,10 @@ public class MenuManager {
 
     private void saveMenuToFile() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(MENU_FILE))) {
-            // For now, we'll just save a simple format
             for (MenuItem item : menu) {
-                writer.write(item.toString());
+                // Save in a parseable format: name|type|price|description
+                writer.write(item.getName() + "|" + item.getType().name() + "|" + 
+                           item.getPrice() + "|" + item.getDescription());
                 writer.newLine();
             }
         } catch (IOException e) {
