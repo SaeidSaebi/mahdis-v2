@@ -33,6 +33,10 @@ public class Customer {
     }
 
     public String hasSubscription() {
-        return "";
+        return subscribed ? "true" : "false";
+    }
+    
+    public boolean isSubscribed() {
+        return subscribed;
     }
 }

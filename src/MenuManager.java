@@ -36,10 +36,37 @@ public class MenuManager {
 
     private void loadMenuFromFile() {
         try (BufferedReader reader = new BufferedReader(new FileReader(MENU_FILE))) {
-            // For now, we'll just create an empty menu
             menu = new ArrayList<>();
+            String line;
+            while ((line = reader.readLine()) != null && !line.trim().isEmpty()) {
+                // Parse the saved menu item format
+                // Format: "name - type - price تومان\ndescription"
+                if (line.contains(" - ") && line.contains(" تومان")) {
+                    String[] parts = line.split(" - ");
+                    if (parts.length >= 3) {
+                        String name = parts[0].trim();
+                        String typeStr = parts[1].trim();
+                        String priceStr = parts[2].replace(" تومان", "").trim();
+                        
+                        // Read the next line for description
+                        String description = "";
+                        if (reader.ready()) {
+                            description = reader.readLine();
+                        }
+                        
+                        try {
+                            double price = Double.parseDouble(priceStr);
+                            MenuItemType type = MenuItemType.valueOf(typeStr);
+                            menu.add(new MenuItem(name, price, type, description));
+                        } catch (Exception e) {
+                            System.out.println("خطا در بارگذاری آیتم منو: " + line);
+                        }
+                    }
+                }
+            }
         } catch (IOException e) {
             menu = new ArrayList<>();
+            System.out.println("خطا در بارگذاری منو: " + e.getMessage());
         }
     }
 

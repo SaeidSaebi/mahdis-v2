@@ -67,5 +67,13 @@ public class CustomerManager {
     }
 
     public void updateCustomer(Customer customer) {
+        // Find and update the customer in the list
+        for (int i = 0; i < customers.size(); i++) {
+            if (customers.get(i).getEmail().equalsIgnoreCase(customer.getEmail())) {
+                customers.set(i, customer);
+                saveCustomersToFile();
+                break;
+            }
+        }
     }
 }
