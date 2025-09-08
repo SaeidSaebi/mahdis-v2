@@ -33,9 +33,9 @@ public class Admin {
     public void viewReports() {
         // شبیه‌سازی گزارشات فروش
         System.out.println("نمایش گزارشات فروش (شبیه‌سازی):");
-        System.out.println("فروش روزانه: 5,000,000 تومان");
-        System.out.println("فروش هفتگی: 35,000,000 تومان");
-        System.out.println("فروش ماهانه: 150,000,000 تومان");
+        System.out.println("فروش روزانه: 500,000 تومان");
+        System.out.println("فروش هفتگی: 3,500,000 تومان");
+        System.out.println("فروش ماهانه: 15,000,000 تومان");
     }
 
     public boolean login(String username, String password) {

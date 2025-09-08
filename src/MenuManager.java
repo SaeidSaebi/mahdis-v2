@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class MenuManager {
     private ArrayList<MenuItem> menu = new ArrayList<>();
-    private final String MENU_FILE = "menu.json";
+    private final String MENU_FILE = "menu.txt";
 
     public MenuManager() {
         loadMenuFromFile();

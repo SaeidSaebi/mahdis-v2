@@ -31,4 +31,8 @@ public class Customer {
     public String toString() {
         return String.format("%s (%s) - اشتراک: %s", name, email, (subscribed ? "فعال" : "غیرفعال"));
     }
-} 
+
+    public String hasSubscription() {
+        return "";
+    }
+}
